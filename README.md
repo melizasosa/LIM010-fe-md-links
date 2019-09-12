@@ -1,5 +1,6 @@
 # Markdown Links
-
+### Diagrama de Flujo
+![Diagrama de Flujo](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/MdLinks.png?raw=true)
 ## Preámbulo
 
 [Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado
