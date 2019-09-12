@@ -1,0 +1,1 @@
+console.log(sumar(1,2));
