@@ -1,5 +1,5 @@
 import {functionTypePath} from '../src/path.js';
-import {filePathExists} from '../../index.js';
+import {filePathExists} from '../src/file.js';
 describe('Test de la función convertir ruta relativa', () => {
   it('Debería ser una función', () => {
   	expect(typeof functionTypePath).toBe('function');
