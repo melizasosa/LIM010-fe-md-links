@@ -1,4 +1,5 @@
-import {functionTypePath, functionVerifyFile} from '../src/path.js';
+import {functionTypePath} from '../src/path.js';
+import {filePathExists} from '../../index.js';
 describe('Test de la función convertir ruta relativa', () => {
   it('Debería ser una función', () => {
   	expect(typeof functionTypePath).toBe('function');
@@ -11,15 +12,18 @@ describe('Test de la función convertir ruta relativa', () => {
 	});
 });
 
-describe('Test de la función verificar si es un archivo', () => {
+describe('Permite verificar si es un archivo', () => {
   it('Debería ser una función', () => {
-  	expect(typeof functionVerifyFile).toBe('function');
+  	expect(typeof filePathExists).toBe('function');
 	});	
-  it('Debería retornar un booleano (si es un archivo debe ser TRUE)', () => {
-    expect(functionVerifyFile('archivo.md')).toBe(true);
+  it('Debería ser true para una ruta que sea de archivo', () => {
+    return filePathExists('prueba\\archivo.md').then(result => {
+      expect(result).toBe(true)
+    });
   });
-  it('DDebería retornar un booleano, si es un archivo debe ser FALSE', () => {
-    expect(functionTypePath('prueba/archivo.md')).toBe(false);
-	});
+  it('Debería ser false para una ruta que no sea de archivo', () => {
+    return filePathExists('prueba\\archivoo.md').then(result => {
+      expect(result).toBe(false)
+    });
+  });
 });
-

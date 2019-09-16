@@ -1,16 +1,22 @@
 // Contiene utilidads para la manipulación y trasnformacion de arhivos
-const fsModule = require('fs');
+const fs = require('fs');
 
-const nameFile = 'archivo.md';
-// export const functionVerifyFile = (nameFile) => {
-//   // const fileStats = fs.statSync(nameFile);
-// 	// console.log(fileStats.);
-// 	fs.sta
-// };
-fsModule.stat(nameFile, (err, data)=> {
-  if (err) 
-    console.log('it does not exist');
-  else 
-    console.log('it exists');
-});
-console.log(fsModule.stat());
+export const  filePathExists=(filePath)=> {
+  return new Promise((resolve, reject) => {
+    fs.stat(filePath, (err, stats) => {
+      if (err && err.code === 'ENOENT') {
+        console.log(false);
+        return resolve(false);
+      } else if (err) {
+        console.log(err);
+        return reject(err);
+      }
+      if (stats.isFile() || stats.isDirectory()) {
+        console.log(true);
+        return resolve(true);
+      }
+    });
+  });
+};
+
+filePathExists('prueba\\archivo.md') 

@@ -1,12 +1,24 @@
-// Contiene utilidads para la manipulación y trasnformacion de arhivos
-const fsModule = require('fs');
+// // Contiene utilidads para la manipulación y trasnformacion de arhivos
+// const fs = require('fs');
 
-const nameFile = 'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md';
+// export const  filePathExists=(filePath)=> {
+//   return new Promise((resolve, reject) => {
+//     fs.stat(filePath, (err, stats) => {
+//       if (err && err.code === 'ENOENT') {
+//         console.log(false);
+//         return resolve(false);
+//       } else if (err) {
+//         console.log(err);
+//         return reject(err);
+//       }
+//       if (stats.isFile() || stats.isDirectory()) {
+//         console.log(true);
+//         return resolve(true);
+//       }
+//     });
+//   });
+// };
 
-fsModule.stat(nameFile, (err, data)=> {
-  if (err) 
-    console.log('no existe' + err);
-  else 
-  console.log(data);
-  console.log(data.isFile()); 
-});
+// filePathExists('prueba\\archivo.md') 
+
+
