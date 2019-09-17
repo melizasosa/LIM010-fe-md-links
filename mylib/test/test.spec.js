@@ -10,7 +10,6 @@ describe('Test de la función convertir ruta relativa', () => {
     expect(functionTypePath('prueba/archivo.md')).toBe(path.join(process.cwd(),'prueba\\archivo.md'));
   });
   it('Debería retornar una ruta absoluta', () => {
-    //let pathAbsolute = path.join(process.cwd(), 'prueba\\archivo.md');
     expect(functionTypePath(path.join(process.cwd(),'prueba\\archivo.md'))).toBe(path.join(process.cwd(),'prueba\\archivo.md'));
 	});
 });
