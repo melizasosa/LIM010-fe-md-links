@@ -2,9 +2,10 @@ import { functionTypePath } from '../src/path';
 import { filePathExists,isFileMd } from '../src/file.js';
 import path from 'path';
 
+
 describe('Test de la función convertir ruta relativa', () => {
   it('Debería ser una función', () => {
-  	expect(typeof functionTypePath).toBe('function');
+    expect(typeof functionTypePath).toBe('function');
 	});	
   it('Debería convertir una ruta relativa a absoluta', () => {
     expect(functionTypePath('prueba/archivo.md')).toBe(path.join(process.cwd(),'prueba\\archivo.md'));
@@ -41,6 +42,6 @@ describe('Permite leer el contenido del archivo', () => {
   	expect(typeof isFileMd).toBe('function');
 	});	
   it('Debería leer el contenido del archivo', () => {
-    expect(readFileA(path.join(process.cwd(),'prueba/archivo.md')).toBe('hola');
+    expect(readFileA(path.join(process.cwd(),'prueba/archivo.md'))).toBe('hola');
   });
 });
