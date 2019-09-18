@@ -1,13 +1,8 @@
 const fs = require('fs');
 
-// LEE ASINCRONICAMENTE TODO EL CONTENIDO  DE UN ARCHIVO
-const readFileA = (file) => {
-  fs.readFile(file, 'utf8', (error, data)=>{
-    if(error){
-      console.log(`error ${error}`);
-    } else {
-      console.log(data);
-      }
-  });
-}
-readFileA('prueba\\archivo.md') ;
+// LEE SINCRONA TODO EL CONTENIDO  DE UN ARCHIVO
+const readFileS = (file) => {
+  const data = fs.readFileSync(file, 'utf8');
+  return data;
+};
+readFileS('prueba\\archivo.md');
