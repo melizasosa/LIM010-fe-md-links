@@ -2,13 +2,13 @@
 const fs = require('fs');
 const pathModule = require('path');
 
-export const functionTypePath = (inputPath) => {
-  if (!pathModule.isAbsolute(inputPath)) {
-    return pathModule.resolve(inputPath);
+// CONVERTIR RUTA RELATIVA - ABSOLUTA
+export const functionTypePath = (filePath) => {
+  if (!pathModule.isAbsolute(filePath)) {
+    return pathModule.resolve(filePath);
   }
-  return inputPath;
+  return filePath;
 };
-
 
 // VERIFICAR SI ES ARCHIVO
 export const functionFilePathExists = (nameFile) => {
@@ -20,13 +20,6 @@ export const functionFilePathExists = (nameFile) => {
 export const functionIsFileMd = (file) => {
   const extName = pathModule.extname(file) ==='.md';
   return extName;
-}
-
-// LEE SINCRONA TODO EL CONTENIDO  DE UN ARCHIVO
-export const functionReadFileS = (file) => {
-  let data = fs.readFileSync(file, 'utf8');
-  console.log(data);
-  return data;
 }
 
 //  RECORRE TODO LOS ARCHIVOS CON EXT .MD  DE LA CARPETA Y LO GUARDA EN ARRAY
@@ -44,4 +37,21 @@ export const functionReadAllFiles = (route) => {
     });     
   }
   return array;  
+};
+
+// LEE SINCRONA TODO EL CONTENIDO  DE UN ARCHIVO
+export const functionReadFileS = (file) => {
+  let data = fs.readFileSync(file, 'utf8');
+  console.log(data);
+  return data;
+};
+
+// RECORRER Y LEER LOS LINKS DE ARCHIVOS .MD
+export const functionReadLinkFile = (arrayFileMd) => {
+  let arrObj = [];
+  let arrayFile = functionReadAllFiles(functionTypePath(arrayFileMd))
+  arrayFile.forEach((filePath) => {
+    const linksFileMd = functionReadFileS(filePath);
+
+  });
 };

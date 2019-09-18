@@ -1,5 +1,6 @@
 import { functionTypePath, functionFilePathExists,functionIsFileMd, functionReadFileS,functionReadAllFiles  } from '../src/index.js';
 import path from 'path';
+import { functionReadLinkFile } from '../index.js';
 
 
 describe('Test de la función convertir ruta relativa', () => {
@@ -52,3 +53,9 @@ describe('Permite recorrer los archivos del directorio', () => {
     expect(functionReadAllFiles(path.join(process.cwd(),'prueba'))).toEqual([path.join(process.cwd(), 'prueba\\archivo.md'),path.join(process.cwd(),'prueba\\archivo3.md'), path.join(process.cwd(), 'prueba\\prueba2\\archivo2.md')]);
   });
 });
+
+describe('Permite obtiener los links de las rutas absolutas .md', () => {
+  it('Debería ser una función', () => {
+    expect(typeof functionReadLinkFile).toBe('function');
+  });
+
