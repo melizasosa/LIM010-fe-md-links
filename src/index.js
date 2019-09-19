@@ -52,7 +52,7 @@ export const functionReadLinkFile = (arrayFileMd) => {
   const arrObj = [];
   const arrayFile = functionReadAllFiles(functionTypePath(arrayFileMd));
   arrayFile.forEach((filePath) => {
-    let linksFileMd = functionReadFileS(filePath);
+    let linksFileMd =git  functionReadFileS(filePath);
     const renderer = new marked.Renderer();
     renderer.link = (href, title, text) => {
       arrObj.push(
