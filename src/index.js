@@ -49,24 +49,23 @@ export const functionReadAllFiles = (route) => {
 
 // RECORRER Y LEER LOS LINKS DE ARCHIVOS .MD
 export const functionReadLinkFile = (arrayFileMd) => {
-  const arrObj = [];
+  const arrLinks = [];
   const arrayFile = functionReadAllFiles(functionTypePath(arrayFileMd));
   arrayFile.forEach((filePath) => {
-    let linksFileMd =git  functionReadFileS(filePath);
+    const linksFileMd = functionReadFileS(filePath);
     const renderer = new marked.Renderer();
-    renderer.link = (href, title, text) => {
-      arrObj.push(
-        { href: href,
-          text:text,
+    renderer.link = (url, title, urlText) => {
+      arrLinks.push(
+        {
+          href: url,
+          text: urlText,
           filepath: filePath,
-        }); 
-      return renderer;
+        },
+      );
     };
-    marked(filePath, { renderer:renderer});
+    marked(linksFileMd, { renderer });
   });
-  // eslint-disable-next-line no-undef
-  return arrObj;
+  return arrLinks;
 };
-// const md = 'this is some example markdown with [a link](github.com).';
 
-console.log(functionReadLinkFile('C:/Users/L-67/Desktop/Proyecto-Links/LIM-010-fe-md-links/prueba'));
+// console.log(functionReadLinkFile(pathModule.join(process.cwd(), 'prueba')));
