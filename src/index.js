@@ -2,6 +2,7 @@
 const fsModule = require('fs');
 const pathModule = require('path');
 const marked = require('marked');
+const fetch = require('node-fetch');
 
 export const functionTypePath = (filePath) => {
   if (!pathModule.isAbsolute(filePath)) {
@@ -48,9 +49,9 @@ export const functionReadAllFiles = (route) => {
 // console.log(functionReadAllFiles('prueba'));
 
 // RECORRER Y LEER LOS LINKS DE ARCHIVOS .MD
-export const functionReadLinkFile = (arrayFileMd) => {
+export const functionExtractedLinkFile = (theRoute) => {
   const arrLinks = [];
-  const arrayFile = functionReadAllFiles(functionTypePath(arrayFileMd));
+  const arrayFile = functionReadAllFiles(functionTypePath(theRoute));
   arrayFile.forEach((filePath) => {
     const linksFileMd = functionReadFileS(filePath);
     const renderer = new marked.Renderer();
@@ -68,4 +69,21 @@ export const functionReadLinkFile = (arrayFileMd) => {
   return arrLinks;
 };
 
-// console.log(functionReadLinkFile(pathModule.join(process.cwd(), 'prueba')));
+// VALIDAR SI EL LINK ES VALIDO O NO
+export const functionValidateLinks = (theRouter) => {
+  const arrayObj = functionExtractedLinkFile(theRouter);
+  const urlFileMd = arrayObj.map((elemento) => new Promise((resolve) => fetch(elemento.href).then((val) => {
+    if (val.status > 199 && val.status < 400) {
+      elemento.status = val.status;
+      elemento.statusText = val.statusText;
+      resolve(elemento);
+    } else {
+      elemento.status = val.status;
+      elemento.statusText = val.statusText;
+      resolve(elemento);
+    }
+  })));
+  return Promise.all(urlFileMd);
+};
+
+functionValidateLinks(pathModule.join(process.cwd(), 'prueba')).then((val) => console.log(val));

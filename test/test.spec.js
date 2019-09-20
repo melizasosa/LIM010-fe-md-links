@@ -1,11 +1,11 @@
 import path from 'path';
 import {
   functionTypePath, functionFilePathExists, functionIsFileMd, functionReadFileS,
-  functionReadAllFiles, functionReadLinkFile,
+  functionReadAllFiles, functionExtractedLinkFile, functionValidateLinks,
 } from '../src/index.js';
 
 
-describe('Test de la función convertir ruta relativa', () => {
+describe('TPermite convertir ruta relativa', () => {
   it('Debería ser una función', () => {
     expect(typeof functionTypePath).toBe('function');
   });
@@ -58,10 +58,10 @@ describe('Permite recorrer los archivos del directorio', () => {
 
 describe('Permite obtiener los links de las rutas absolutas .md', () => {
   it('Debería ser una función', () => {
-    expect(typeof functionReadLinkFile).toBe('function');
+    expect(typeof functionExtractedLinkFile).toBe('function');
   });
   it('Debería retornar un array con objetos de los links', () => {
-    expect(functionReadLinkFile(path.join(process.cwd(), 'prueba'))).toEqual(
+    expect(functionExtractedLinkFile(path.join(process.cwd(), 'prueba'))).toEqual(
       [{
         href: 'https://aws.amazon.com/es/',
         text: 'Netflix',
@@ -73,5 +73,11 @@ describe('Permite obtiener los links de las rutas absolutas .md', () => {
         filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
       }],
     );
+  });
+});
+
+describe('Permite validar el link que se encuentra en la ruta', () => {
+  it('validateLinks deberia ser una funcion', () => {
+    expect(typeof functionValidateLinks).toBe('function');
   });
 });
