@@ -86,4 +86,6 @@ export const functionValidateLinks = (theRouter) => {
   return Promise.all(urlFileMd);
 };
 
+// VALIDAR SI EL LINK ES VALIDO O NO
+
 functionValidateLinks(pathModule.join(process.cwd(), 'prueba')).then((val) => console.log(val));

@@ -43,7 +43,7 @@ describe('Permite leer el contenido del archivo', () => {
     expect(typeof functionReadFileS).toBe('function');
   });
   it('Debería leer el contenido del archivo', () => {
-    expect(functionReadFileS(path.join(process.cwd(), 'prueba/archivo.md'))).toEqual('Amazon [Netflix](https://aws.amazon.com/es/) Bienvenido a google. [Google](https://www.google.com/searc) ');
+    expect(functionReadFileS(path.join(process.cwd(), 'prueba/archivo.md'))).toEqual('Amazon [Netflix](https://aws.amazon.com/es/) Bienvenido a google. [Google](https://www.google.com/searc)');
   });
 });
 
@@ -77,7 +77,28 @@ describe('Permite obtiener los links de las rutas absolutas .md', () => {
 });
 
 describe('Permite validar el link que se encuentra en la ruta', () => {
-  it('validateLinks deberia ser una funcion', () => {
+  it('deberia ser una funcion', () => {
     expect(typeof functionValidateLinks).toBe('function');
   });
+});
+
+describe('Permite validar el link que se encuentra en la ruta ingresada', (done) => {
+  it('Debería vevolvernos una promesa', () => functionValidateLinks(path.join(process.cwd(), 'prueba'))
+    .then((data) => {
+      expect(data).toStrictEqual([{
+        href: 'https://aws.amazon.com/es/',
+        text: 'Netflix',
+        filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+        status: 200,
+        statusText: 'OK',
+      },
+      {
+        href: 'https://www.google.com/searc',
+        text: 'Google',
+        filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+        status: 404,
+        statusText: 'Not Found',
+      }]);
+      done();
+    }));
 });
