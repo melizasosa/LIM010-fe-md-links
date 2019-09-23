@@ -4,43 +4,44 @@ const pathModule = require('path');
 const marked = require('marked');
 const fetch = require('node-fetch');
 
-export const functionTypePath = (filePath) => {
+
+const functionTypePath = (filePath) => {
   if (!pathModule.isAbsolute(filePath)) {
     return pathModule.resolve(filePath);
   }
   return filePath;
 };
-
+// console.log(functionTypePath(pathModule.join(process.cwd(), 'prueba\\archivo.md')));
 
 // VERIFICAR SI ES ARCHIVO
-export const functionFilePathExists = (nameFile) => {
+const functionFilePathExists = (nameFile) => {
   const isItFile = fsModule.statSync(nameFile);
   return isItFile.isFile();
 };
 
 // OBTENER SÓLO LOS ARCHIVOS CON EXTENSIÓN .MD
-export const functionIsFileMd = (file) => {
-  const extName = pathModule.extname(file) === '.md';
+const functionIsFileMd = (path) => {
+  const extName = pathModule.extname(path) === '.md';
   return extName;
 };
 
 // LEE SINCRONA TODO EL CONTENIDO  DE UN ARCHIVO
-export const functionReadFileS = (file) => {
-  const data = fsModule.readFileSync(file, 'utf8');
+const functionReadFileS = (path) => {
+  const data = fsModule.readFileSync(path, 'utf8');
   return data;
 };
 
 //  RECORRE TODO LOS ARCHIVOS CON EXT .MD  DE LA CARPETA Y LO GUARDA EN ARRAY
-export const functionReadAllFiles = (route) => {
+const functionReadAllFiles = (path) => {
   let arrayFileMd = [];
-  if (functionFilePathExists(route)) {
-    if (functionIsFileMd(route)) {
-      arrayFileMd.push(route);
+  if (functionFilePathExists(path)) {
+    if (functionIsFileMd(path)) {
+      arrayFileMd.push(path);
     }
   } else {
-    const directory = fsModule.readdirSync(route);
+    const directory = fsModule.readdirSync(path);
     directory.forEach((file) => {
-      const arrayPath = functionReadAllFiles(pathModule.join(route, file));
+      const arrayPath = functionReadAllFiles(pathModule.join(path, file));
       arrayFileMd = arrayFileMd.concat(arrayPath);
     });
   }
@@ -49,9 +50,9 @@ export const functionReadAllFiles = (route) => {
 // console.log(functionReadAllFiles('prueba'));
 
 // RECORRER Y LEER LOS LINKS DE ARCHIVOS .MD
-export const functionExtractedLinkFile = (theRoute) => {
+const functionExtractedLinkFile = (path) => {
   const arrLinks = [];
-  const arrayFile = functionReadAllFiles(functionTypePath(theRoute));
+  const arrayFile = functionReadAllFiles(functionTypePath(path));
   arrayFile.forEach((filePath) => {
     const linksFileMd = functionReadFileS(filePath);
     const renderer = new marked.Renderer();
@@ -70,8 +71,8 @@ export const functionExtractedLinkFile = (theRoute) => {
 };
 
 // VALIDAR SI EL LINK ES VALIDO O NO
-export const functionValidateLinks = (theRouter) => {
-  const arrayObj = functionExtractedLinkFile(theRouter);
+const functionValidateLinks = (path) => {
+  const arrayObj = functionExtractedLinkFile(path);
   const urlFileMd = arrayObj.map((elemento) => new Promise((resolve) => fetch(elemento.href).then((val) => {
     if (val.status > 199 && val.status < 400) {
       elemento.status = val.status;
@@ -86,4 +87,32 @@ export const functionValidateLinks = (theRouter) => {
   return Promise.all(urlFileMd);
 };
 
-// functionValidateLinks(pathModule.join(process.cwd(), 'prueba')).then((val) => console.log(val));
+// FUNCIÓN DE MDLINKS
+const mdLinks = (path, options) => new Promise((resolve, reject) => {
+  try {
+    if (options) {
+      resolve(functionValidateLinks(path));
+    } else {
+      resolve(functionExtractedLinkFile(path));
+    }
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      const tipoError = 'Ruta incorrecta';
+      reject(tipoError);
+    }
+  }
+});
+
+// mdLinks(pathModule.join(process.cwd(), 'pruebaarchivo5.md'), { validate: true }).then((val) => console.log(val));
+
+
+module.exports = {
+  functionTypePath,
+  functionFilePathExists,
+  functionIsFileMd,
+  functionReadFileS,
+  functionReadAllFiles,
+  functionExtractedLinkFile,
+  functionValidateLinks,
+  mdLinks,
+};

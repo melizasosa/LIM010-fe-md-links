@@ -1,7 +1,7 @@
 import path from 'path';
 import {
   functionTypePath, functionFilePathExists, functionIsFileMd, functionReadFileS,
-  functionReadAllFiles, functionExtractedLinkFile, functionValidateLinks,
+  functionReadAllFiles, functionExtractedLinkFile, functionValidateLinks, mdLinks,
 } from '../src/index.js';
 
 
@@ -76,14 +76,8 @@ describe('Permite obtiener los links de las rutas absolutas .md', () => {
   });
 });
 
-describe('Permite validar el link que se encuentra en la ruta', () => {
-  it('deberia ser una funcion', () => {
-    expect(typeof functionValidateLinks).toBe('function');
-  });
-});
-
-describe('Permite validar el link que se encuentra en la ruta ingresada', (done) => {
-  it('Debería vevolvernos una promesa', () => functionValidateLinks(path.join(process.cwd(), 'prueba'))
+describe('Permite validar el link que se encuentra en la ruta ingresada', () => {
+  it('Debería vevolvernos una promesa', (done) => functionValidateLinks(path.join(process.cwd(), 'prueba'))
     .then((data) => {
       expect(data).toStrictEqual([{
         href: 'https://aws.amazon.com/es/',
@@ -100,5 +94,46 @@ describe('Permite validar el link que se encuentra en la ruta ingresada', (done)
         statusText: 'Not Found',
       }]);
       done();
+    }));
+});
+// // eslint-disable-next-line jest/no-identical-title
+describe('Permite devolver un array con objetos de la ruta ingresada', () => {
+  it('Debería vevolvernos una promesa con validacion del link', (done) => mdLinks(path.join(process.cwd(), 'prueba'), { validate: true })
+    .then((data) => {
+      expect(data).toStrictEqual([{
+        href: 'https://aws.amazon.com/es/',
+        text: 'Netflix',
+        filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+        status: 200,
+        statusText: 'OK',
+      },
+      {
+        href: 'https://www.google.com/searc',
+        text: 'Google',
+        filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+        status: 404,
+        statusText: 'Not Found',
+      }]);
+      done();
+    }));
+  // eslint-disable-next-line jest/no-identical-title
+  it('Debería vevolvernos una promesa sin la validacion del link', (done) => mdLinks(path.join(process.cwd(), 'prueba'))
+    .then((data) => {
+      expect(data).toStrictEqual([{
+        href: 'https://aws.amazon.com/es/',
+        text: 'Netflix',
+        filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+      },
+      {
+        href: 'https://www.google.com/searc',
+        text: 'Google',
+        filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+      }]);
+      done();
+    }));
+  it('deberia retornar un mensaje de error', () => mdLinks(path.join(process.cwd(), 'pruebaa'), { validate: true })
+    .catch((data) => {
+      // eslint-disable-next-line no-param-reassign
+      expect(data.code === 'ENOENT').toEqual(false);
     }));
 });
