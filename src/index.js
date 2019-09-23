@@ -102,9 +102,18 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
     }
   }
 });
-
+// eslint-disable-next-line max-len
 // mdLinks(pathModule.join(process.cwd(), 'pruebaarchivo5.md'), { validate: true }).then((val) => console.log(val));
 
+// FUNCIÓN DE STATS
+const functionStats = (path) => {
+  const arrayLinks = functionExtractedLinkFile(path);
+  const totalElementosArray = arrayLinks.map((elemento) => elemento.href);
+  const sinRepetidos = totalElementosArray.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
+  return console.log(`Total:${totalElementosArray.length} Unique: ${sinRepetidos.length}`);
+};
+
+console.log(functionStats(pathModule.join(process.cwd(), 'prueba')));
 
 module.exports = {
   functionTypePath,
