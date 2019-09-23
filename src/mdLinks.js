@@ -1,15 +1,21 @@
 
-// import { path } from 'path';
-// import { Promise } from 'es6-promise';
+// const pathModule = require('path');
+// // import { Promise } from 'es6-promise';
 // import { functionValidateLinks, functionExtractedLinkFile } from './index.js';
 
-// // eslint-disable-next-line no-undef
-// const mdLinks = (router, options) => new Promise((resolve) => {
-//   if (options && options.validate === true) {
-//     resolve(functionValidateLinks(router));
-//   } else {
-//     resolve(functionExtractedLinkFile(router));
+// const mdLinks = (path, options) => new Promise((resolve, reject) => {
+//   try {
+//     if (options) {
+//       resolve(functionValidateLinks(path));
+//     } else {
+//       resolve(functionExtractedLinkFile(path));
+//     }
+//   } catch (error) {
+//     if (error.code === 'ENOENT') {
+//       const tipoError = 'Ruta incorrecta';
+//       reject(tipoError);
+//     }
 //   }
 // });
 
-// mdLinks(path.join(process.cwd(), 'prueba\\archivo.md'), { validate: true }).then((val) => console.log(val));
+// mdLinks(pathModule.join(process.cwd(), 'prueba\\archivo.md'), { validate: true }).then((val) => console.log(val));

@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 // Contiene utilidads para la manipulación y trasnformacion de arhivos
 const fsModule = require('fs');
 const pathModule = require('path');
@@ -11,7 +12,6 @@ const functionTypePath = (filePath) => {
   }
   return filePath;
 };
-// console.log(functionTypePath(pathModule.join(process.cwd(), 'prueba\\archivo.md')));
 
 // VERIFICAR SI ES ARCHIVO
 const functionFilePathExists = (nameFile) => {
@@ -47,7 +47,6 @@ const functionReadAllFiles = (path) => {
   }
   return arrayFileMd;
 };
-// console.log(functionReadAllFiles('prueba'));
 
 // RECORRER Y LEER LOS LINKS DE ARCHIVOS .MD
 const functionExtractedLinkFile = (path) => {
@@ -74,6 +73,7 @@ const functionExtractedLinkFile = (path) => {
 const functionValidateLinks = (path) => {
   const arrayObj = functionExtractedLinkFile(path);
   const urlFileMd = arrayObj.map((elemento) => new Promise((resolve) => fetch(elemento.href).then((val) => {
+    
     if (val.status > 199 && val.status < 400) {
       elemento.status = val.status;
       elemento.statusText = val.statusText;
@@ -102,18 +102,32 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
     }
   }
 });
-// eslint-disable-next-line max-len
-// mdLinks(pathModule.join(process.cwd(), 'pruebaarchivo5.md'), { validate: true }).then((val) => console.log(val));
 
 // FUNCIÓN DE STATS
-const functionStats = (path) => {
-  const arrayLinks = functionExtractedLinkFile(path);
+const functionStats = (arrayLinks) => {
+  // const arrayLinks = functionExtractedLinkFile(path);
   const totalElementosArray = arrayLinks.map((elemento) => elemento.href);
   const sinRepetidos = totalElementosArray.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
-  return console.log(`Total:${totalElementosArray.length} Unique: ${sinRepetidos.length}`);
+  const stats = `Total:${totalElementosArray.length} Unique: ${sinRepetidos.length}`;
+  return stats;
 };
 
-console.log(functionStats(pathModule.join(process.cwd(), 'prueba')));
+// FUNCIÓN DE VALIDATE
+const functionValidate = (arrayLinks) => {
+  let arrayValidate = [];
+  const totalElementosArray = arrayLinks.map((elemento) => elemento.href);
+  console.log(total);
+  // const sinRepetidos = totalElementosArray.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
+  arrayValidate = `${totalElementosArray.href} ${totalElementosArray.text}`;
+  return arrayValidate;
+};
+console.log(functionValidate([{
+  href: 'https://aws.amazon.com/es/',
+  text: 'Netflix' },
+{
+  href: 'https://www.google.com/searc',
+  text: 'Google' }]));
+
 
 module.exports = {
   functionTypePath,
@@ -124,4 +138,5 @@ module.exports = {
   functionExtractedLinkFile,
   functionValidateLinks,
   mdLinks,
+  functionStats,
 };

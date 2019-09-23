@@ -2,8 +2,13 @@ import path from 'path';
 import {
   functionTypePath, functionFilePathExists, functionIsFileMd, functionReadFileS,
   functionReadAllFiles, functionExtractedLinkFile, functionValidateLinks, mdLinks,
+  functionStats, functionValidate,
 } from '../src/index.js';
 
+const arrayOutput = [
+  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ OK 200 Netflix', 
+  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://www.google.com/searc Not Found 404 Not Found'
+];
 
 describe('TPermite convertir ruta relativa', () => {
   it('Debería ser una función', () => {
@@ -136,4 +141,45 @@ describe('Permite devolver un array con objetos de la ruta ingresada', () => {
       // eslint-disable-next-line no-param-reassign
       expect(data.code === 'ENOENT').toEqual(false);
     }));
+});
+
+// eslint-disable-next-line jest/no-identical-title
+describe('Permite devolver un string del total y unique', () => {
+  it('Debería retornar un string', () => {
+    // eslint-disable-next-line jest/valid-expect
+    expect(functionStats([{
+      href: 'https://aws.amazon.com/es/',
+      text: 'Netflix',
+      filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+      status: 200,
+      statusText: 'OK',
+    },
+    {
+      href: 'https://www.google.com/searc',
+      text: 'Google',
+      filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+      status: 404,
+      statusText: 'Not Found',
+    }])).toBe('Total:2 Unique: 2');
+  });
+});
+
+describe('Permite devolver un string de todo los elementos', () => {
+  it('Debería retornar un string', () => {
+    // eslint-disable-next-line jest/valid-expect
+    expect(functionValidate([{
+      href: 'https://aws.amazon.com/es/',
+      text: 'Netflix',
+      filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+      status: 200,
+      statusText: 'OK',
+    },
+    {
+      href: 'https://www.google.com/searc',
+      text: 'Google',
+      filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+      status: 404,
+      statusText: 'Not Found',
+    }])).toBe(arrayOutput);
+  });
 });
