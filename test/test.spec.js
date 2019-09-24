@@ -2,13 +2,31 @@ import path from 'path';
 import {
   functionTypePath, functionFilePathExists, functionIsFileMd, functionReadFileS,
   functionReadAllFiles, functionExtractedLinkFile, functionValidateLinks, mdLinks,
-  functionStats, functionValidate,
+  functionStats, functionValidate, functionMdLinksCli,
 } from '../src/index.js';
 
+// eslint-disable-next-line import/named
+// import { functionMdLinksCli } from '../src/cli.js';
+
 const arrayOutput = [
-  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ OK 200 Netflix', 
-  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://www.google.com/searc Not Found 404 Not Found'
+  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ 200 Netflix',
+  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://www.google.com/searc 404 Google',
 ];
+
+const arrayInput = [{
+  href: 'https://aws.amazon.com/es/',
+  text: 'Netflix',
+  filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+  status: 200,
+  statusText: 'OK',
+},
+{
+  href: 'https://www.google.com/searc',
+  text: 'Google',
+  filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+  status: 404,
+  statusText: 'Not Found',
+}];
 
 describe('TPermite convertir ruta relativa', () => {
   it('Debería ser una función', () => {
@@ -164,22 +182,34 @@ describe('Permite devolver un string del total y unique', () => {
   });
 });
 
-describe('Permite devolver un string de todo los elementos', () => {
-  it('Debería retornar un string', () => {
+describe('Permite devolver un string de todo los elementos del array', () => {
+  it('Debería retornar un string de los links', () => {
     // eslint-disable-next-line jest/valid-expect
-    expect(functionValidate([{
-      href: 'https://aws.amazon.com/es/',
-      text: 'Netflix',
-      filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
-      status: 200,
-      statusText: 'OK',
-    },
-    {
-      href: 'https://www.google.com/searc',
-      text: 'Google',
-      filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
-      status: 404,
-      statusText: 'Not Found',
-    }])).toBe(arrayOutput);
+    expect(functionValidate(arrayInput)).toStrictEqual(arrayOutput);
   });
+});
+
+// eslint-disable-next-line jest/no-identical-title
+describe('Permite devolver un array con objetos de la ruta ingresada', () => {
+  it('Debería vevolvernos una promesa conn string', (done) => functionMdLinksCli('prueba', '--v', '--s')
+    .then((data) => {
+      expect(data).toBe('Total:2 Unique: 2 Broken: 0');
+      done();
+    }));
+  it('Debería vevolvernos una con 3 estadisticas', (done) => functionMdLinksCli('prueba', '--v')
+    .then((data) => {
+      expect(data).toStrictEqual(arrayOutput);
+      done();
+    }));
+  it('Debería vevolvernos una con 2 estadisticas', (done) => functionMdLinksCli('prueba', '--stats')
+    .then((data) => {
+      expect(data).toStrictEqual('Total:2 Unique: 2');
+      done();
+    }));
+  // eslint-disable-next-line jest/no-identical-title
+  it('Debería vevolvernos una con 2 estadisticas', (done) => functionMdLinksCli('prueba', '--s')
+    .then((data) => {
+      expect(data).toStrictEqual('Total:2 Unique: 2');
+      done();
+    }));
 });

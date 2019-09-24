@@ -73,15 +73,15 @@ const functionExtractedLinkFile = (path) => {
 const functionValidateLinks = (path) => {
   const arrayObj = functionExtractedLinkFile(path);
   const urlFileMd = arrayObj.map((elemento) => new Promise((resolve) => fetch(elemento.href).then((val) => {
-    
+    const dat = { ...elemento };
     if (val.status > 199 && val.status < 400) {
-      elemento.status = val.status;
-      elemento.statusText = val.statusText;
-      resolve(elemento);
+      dat.status = val.status;
+      dat.statusText = val.statusText;
+      resolve(dat);
     } else {
-      elemento.status = val.status;
-      elemento.statusText = val.statusText;
-      resolve(elemento);
+      dat.status = val.status;
+      dat.statusText = val.statusText;
+      resolve(dat);
     }
   })));
   return Promise.all(urlFileMd);
@@ -90,7 +90,7 @@ const functionValidateLinks = (path) => {
 // FUNCIÓN DE MDLINKS
 const mdLinks = (path, options) => new Promise((resolve, reject) => {
   try {
-    if (options) {
+    if (options && options.validate) {
       resolve(functionValidateLinks(path));
     } else {
       resolve(functionExtractedLinkFile(path));
@@ -112,21 +112,46 @@ const functionStats = (arrayLinks) => {
   return stats;
 };
 
-// FUNCIÓN DE VALIDATE
+
+// opcion de --validate --v
 const functionValidate = (arrayLinks) => {
-  let arrayValidate = [];
-  const totalElementosArray = arrayLinks.map((elemento) => elemento.href);
-  console.log(total);
-  // const sinRepetidos = totalElementosArray.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
-  arrayValidate = `${totalElementosArray.href} ${totalElementosArray.text}`;
-  return arrayValidate;
+  const totalElementosArray = arrayLinks.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.status} ${elemento.text}`);
+  return totalElementosArray;
 };
-console.log(functionValidate([{
-  href: 'https://aws.amazon.com/es/',
-  text: 'Netflix' },
-{
-  href: 'https://www.google.com/searc',
-  text: 'Google' }]));
+
+// opción de --stats y --validate
+const functionStatsAndValidate = (arraLyinks) => {
+  const totalElementosLinks = arraLyinks.map((elemento) => elemento.href);
+  const linksUnique = totalElementosLinks.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
+  const totalElementosBroken = arraLyinks.filter((val) => val.stats === 'Fail');
+  const statsValidate = `Total:${totalElementosLinks.length} Unique: ${linksUnique.length} Broken: ${totalElementosBroken.length}`;
+  return statsValidate;
+};
+
+// funcion para todas las opciones
+// eslint-disable-next-line max-len
+// const functionMdLinksCli = (path, firtsOption, segundOption) => mdLinks(path, { validate: true }).then((res) => {
+//   if ((firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
+//     return functionStatsAndValidate(res);
+//   } if (firtsOption === '--validate' || firtsOption === '--v') {
+//     return functionValidate(res);
+//   }
+//   if (firtsOption === '--stats' || firtsOption === '--s') {
+//     return functionStats(res);
+//   }
+// });
+const functionMdLinksCli = (path, firtsOption, segundOption) => {
+  if ((firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
+    mdLinks(path, { validate: true }).then((res) => {
+      return functionStatsAndValidate(res);
+    });
+  } if (if (firtsOption === '--validate' || firtsOption === '--v')) {
+    mdLinks(path, { validate: true }).then((res) => {
+      return functionStatsAndValidate(res);
+    });
+  }
+};
+ 
 
 
 module.exports = {
@@ -139,4 +164,6 @@ module.exports = {
   functionValidateLinks,
   mdLinks,
   functionStats,
+  functionValidate,
+  functionMdLinksCli,
 };
