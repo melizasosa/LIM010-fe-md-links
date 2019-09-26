@@ -27,6 +27,7 @@ const functionIsFileMd = (path) => {
 
 // LEE SINCRONA TODO EL CONTENIDO  DE UN ARCHIVO
 const functionReadFileS = (path) => {
+  
   const data = fsModule.readFileSync(path, 'utf8');
   return data;
 };
@@ -72,18 +73,26 @@ const functionExtractedLinkFile = (path) => {
 // VALIDAR SI EL LINK ES VALIDO O NO
 const functionValidateLinks = (path) => {
   const arrayObj = functionExtractedLinkFile(path);
-  const urlFileMd = arrayObj.map((elemento) => new Promise((resolve) => fetch(elemento.href).then((val) => {
-    const dat = { ...elemento };
-    if (val.status > 199 && val.status < 400) {
-      dat.status = val.status;
-      dat.statusText = val.statusText;
-      resolve(dat);
-    } else {
-      dat.status = val.status;
-      dat.statusText = val.statusText;
-      resolve(dat);
-    }
-  })));
+  const urlFileMd = arrayObj.map((elemento) => new Promise((resolve, reject) => {
+    fetch(elemento.href).then((val) => {
+      const dat = { ...elemento };
+      if (val.status > 199 && val.status < 400) {
+        dat.status = val.status;
+        dat.statusText = val.statusText;
+        resolve(dat);
+      } else {
+        dat.status = val.status;
+        dat.statusText = 'Fai';
+        resolve(dat);
+      }
+    }).catch((e) => {
+      const dat = { ...e };
+      dat.status = 'NO EXISTE PAGINA';
+      dat.filepath = e.filePath;
+      dat.statusText = 'meliza';
+      reject(dat);
+    });
+  }));
   return Promise.all(urlFileMd);
 };
 
@@ -97,7 +106,7 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
     }
   } catch (error) {
     if (error.code === 'ENOENT') {
-      const tipoError = 'Ruta incorrecta';
+      const tipoError = 'RUTA INCORRECTA';
       reject(tipoError);
     }
   }
@@ -113,46 +122,51 @@ const functionStats = (arrayLinks) => {
 };
 
 
-// opcion de --validate --v
+// FUNCIÓN OPCIÓN --VALIDATE --V
 const functionValidate = (arrayLinks) => {
-  const totalElementosArray = arrayLinks.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.status} ${elemento.text}`);
+  const totalElementosArray = arrayLinks.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.statusText} ${elemento.text}`);
   return totalElementosArray;
 };
 
-// opción de --stats y --validate
+// FUNCIÓN OPCION --VALIDATE --STATS
 const functionStatsAndValidate = (arraLyinks) => {
   const totalElementosLinks = arraLyinks.map((elemento) => elemento.href);
   const linksUnique = totalElementosLinks.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
-  const totalElementosBroken = arraLyinks.filter((val) => val.stats === 'Fail');
-  const statsValidate = `Total:${totalElementosLinks.length} Unique: ${linksUnique.length} Broken: ${totalElementosBroken.length}`;
+  const totalElementosBroken = arraLyinks.filter((val) => val.statusText === 'Fail' || val.statusText === 'Not Found' || val.statusText === 'undefined');
+  const statsValidate = `Total:${totalElementosLinks.length} Unique: ${linksUnique.length} Broken:${totalElementosBroken.length}`;
   return statsValidate;
 };
+// eslint-disable-next-line no-console
+// console.log(functionStatsAndValidate([{
+//   href: 'https://aws.amazon.com/es/',
+//   text: 'Netflix',
+//   filepath: pathModule.join(process.cwd(), 'prueba\\archivo.md'),
+//   status: 200,
+//   statusText: 'OK',
+// },
+// {
+//   href: 'https://www.hola.com',
+//   text: 'Google',
+//   filepath: pathModule.join(process.cwd(), 'prueba\\archivo.md'),
+//   status: 404,
+//   statusText: 'Not Found',
+// }]));
 
-// funcion para todas las opciones
-// eslint-disable-next-line max-len
-// const functionMdLinksCli = (path, firtsOption, segundOption) => mdLinks(path, { validate: true }).then((res) => {
-//   if ((firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
-//     return functionStatsAndValidate(res);
-//   } if (firtsOption === '--validate' || firtsOption === '--v') {
-//     return functionValidate(res);
-//   }
-//   if (firtsOption === '--stats' || firtsOption === '--s') {
-//     return functionStats(res);
-//   }
-// });
+// FUNCIÓN PARA LAS OPCIONES CON EL CLI
 const functionMdLinksCli = (path, firtsOption, segundOption) => {
-  if ((firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
-    mdLinks(path, { validate: true }).then((res) => {
-      return functionStatsAndValidate(res);
-    });
-  } if (if (firtsOption === '--validate' || firtsOption === '--v')) {
-    mdLinks(path, { validate: true }).then((res) => {
-      return functionStatsAndValidate(res);
-    });
+  if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
+    return mdLinks(path, { validate: true }).then((res) => functionStatsAndValidate(res));
+  } if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v')) {
+    console.log(mdLinks(path, { validate: true }));
+    return mdLinks(path, { validate: true }).then((res) => functionValidate(res));
+  } if ((path !== undefined) && (firtsOption === '--stats' || firtsOption === '--s')) {
+    return mdLinks(path, { validate: true }).then((res) => functionStats(res));
+  } if ((path !== undefined) && (firtsOption === undefined) && (segundOption === undefined)) {
+    return mdLinks(path, { validate: false }).then((res) => res.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.text}`))
   }
 };
- 
 
+functionMdLinksCli('prueba', '--v').then((res) => console.log(res));
 
 module.exports = {
   functionTypePath,
