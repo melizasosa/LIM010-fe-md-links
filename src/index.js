@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */
 // Contiene utilidads para la manipulación y trasnformacion de arhivos
 const fsModule = require('fs');
 const pathModule = require('path');
@@ -72,34 +71,34 @@ const functionExtractedLinkFile = (path) => {
 // VALIDAR SI EL LINK ES VALIDO O NO
 const functionValidateLinks = (path) => {
   const arrayObj = functionExtractedLinkFile(path);
-  const urlFileMd = arrayObj.map((elemento) => new Promise((resolve) => fetch(elemento.href).then((val) => {
-    const dat = { ...elemento };
-    if (val.status > 199 && val.status < 400) {
-      dat.status = val.status;
-      dat.statusText = val.statusText;
+  const urlFileMd = arrayObj.map((elemento) => new Promise((resolve) => {
+    fetch(elemento.href).then((val) => {
+      const dat = { ...elemento };
+      if (val.status > 199 && val.status < 400) {
+        dat.status = val.status;
+        dat.statusText = val.statusText;
+        resolve(dat);
+      } else {
+        dat.status = val.status;
+        dat.statusText = 'Fail';
+        resolve(dat);
+      }
+    }).catch(() => {
+      const dat = { ...elemento };
+      dat.status = 'Fail';
+      dat.statusText = 'Not Exist';
       resolve(dat);
-    } else {
-      dat.status = val.status;
-      dat.statusText = val.statusText;
-      resolve(dat);
-    }
-  })));
+    });
+  }));
   return Promise.all(urlFileMd);
 };
 
 // FUNCIÓN DE MDLINKS
-const mdLinks = (path, options) => new Promise((resolve, reject) => {
-  try {
-    if (options && options.validate) {
-      resolve(functionValidateLinks(path));
-    } else {
-      resolve(functionExtractedLinkFile(path));
-    }
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      const tipoError = 'Ruta incorrecta';
-      reject(tipoError);
-    }
+const mdLinks = (path, options) => new Promise((resolve) => {
+  if (options && options.validate) {
+    resolve(functionValidateLinks(path));
+  } else {
+    resolve(functionExtractedLinkFile(path));
   }
 });
 
@@ -113,45 +112,35 @@ const functionStats = (arrayLinks) => {
 };
 
 
-// opcion de --validate --v
+// FUNCIÓN OPCIÓN --VALIDATE --V
 const functionValidate = (arrayLinks) => {
-  const totalElementosArray = arrayLinks.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.status} ${elemento.text}`);
+  const totalElementosArray = arrayLinks.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.statusText} ${elemento.status} ${elemento.text}`);
   return totalElementosArray;
 };
 
-// opción de --stats y --validate
+// FUNCIÓN OPCION --VALIDATE --STATS
 const functionStatsAndValidate = (arraLyinks) => {
   const totalElementosLinks = arraLyinks.map((elemento) => elemento.href);
   const linksUnique = totalElementosLinks.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
-  const totalElementosBroken = arraLyinks.filter((val) => val.stats === 'Fail');
-  const statsValidate = `Total:${totalElementosLinks.length} Unique: ${linksUnique.length} Broken: ${totalElementosBroken.length}`;
+  const totalElementosBroken = arraLyinks.filter((val) => val.statusText === 'Fail' || val.statusText === 'Not Found' || val.statusText === 'Not Exist');
+  const statsValidate = `Total:${totalElementosLinks.length} Unique: ${linksUnique.length} Broken:${totalElementosBroken.length}`;
   return statsValidate;
 };
 
-// funcion para todas las opciones
-// eslint-disable-next-line max-len
-// const functionMdLinksCli = (path, firtsOption, segundOption) => mdLinks(path, { validate: true }).then((res) => {
-//   if ((firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
-//     return functionStatsAndValidate(res);
-//   } if (firtsOption === '--validate' || firtsOption === '--v') {
-//     return functionValidate(res);
-//   }
-//   if (firtsOption === '--stats' || firtsOption === '--s') {
-//     return functionStats(res);
-//   }
-// });
+// FUNCIÓN PARA LAS OPCIONES CON EL CLI
 const functionMdLinksCli = (path, firtsOption, segundOption) => {
-  if ((firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
-    mdLinks(path, { validate: true }).then((res) => {
-      return functionStatsAndValidate(res);
-    });
-  } if (if (firtsOption === '--validate' || firtsOption === '--v')) {
-    mdLinks(path, { validate: true }).then((res) => {
-      return functionStatsAndValidate(res);
-    });
+  let result;
+  if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
+    result = mdLinks(path, { validate: true }).then((res) => functionStatsAndValidate(res));
+  } else if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v')) {
+    result = mdLinks(path, { validate: true }).then((res) => functionValidate(res));
+  } else if ((path !== undefined) && (firtsOption === '--stats' || firtsOption === '--s')) {
+    result = mdLinks(path, { validate: true }).then((res) => functionStats(res));
+  } else if ((path !== undefined) && (firtsOption === undefined) && (segundOption === undefined)) {
+    result = (path, { validate: false }).then((res) => res.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.text}`));
   }
+  return result;
 };
- 
 
 
 module.exports = {
