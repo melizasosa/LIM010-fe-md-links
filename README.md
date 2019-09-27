@@ -15,6 +15,7 @@ en formato `Markdown`, para verificar los links que contengan y reportar
 algunas estadísticas.
 
 ### Diagrama de Flujo
+A continuación, se muestra el diagrama de flujo con ek algoritmo para la implementación de la solución de md-Links.
 ![Diagrama de Flujo](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/MdLinks.png?raw=true)
 ## Preámbulo
 
