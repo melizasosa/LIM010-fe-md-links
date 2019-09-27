@@ -88,9 +88,9 @@ const functionValidateLinks = (path) => {
     }).catch((e) => {
       const dat = { ...e };
       dat.status = 'NO EXISTE PAGINA';
-      dat.filepath = e.filePath;
+      dat.filepath = path;
       dat.statusText = 'meliza';
-      reject(dat);
+      resolve(dat);
     });
   }));
   return Promise.all(urlFileMd);
@@ -157,7 +157,6 @@ const functionMdLinksCli = (path, firtsOption, segundOption) => {
   if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
     return mdLinks(path, { validate: true }).then((res) => functionStatsAndValidate(res));
   } if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v')) {
-    console.log(mdLinks(path, { validate: true }));
     return mdLinks(path, { validate: true }).then((res) => functionValidate(res));
   } if ((path !== undefined) && (firtsOption === '--stats' || firtsOption === '--s')) {
     return mdLinks(path, { validate: true }).then((res) => functionStats(res));
@@ -166,7 +165,7 @@ const functionMdLinksCli = (path, firtsOption, segundOption) => {
   }
 };
 
-functionMdLinksCli('prueba', '--v').then((res) => console.log(res));
+// functionMdLinksCli('prueba', '--v').then((res) => console.log(res));
 
 module.exports = {
   functionTypePath,
