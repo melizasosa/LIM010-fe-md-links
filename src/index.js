@@ -142,6 +142,7 @@ const functionMdLinksCli = (path, firtsOption, segundOption) => {
   return result;
 };
 
+// functionMdLinksCli('prueba', '--v').then((res) => console.log(res));
 
 module.exports = {
   functionTypePath,
