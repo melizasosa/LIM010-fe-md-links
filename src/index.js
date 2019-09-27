@@ -137,7 +137,7 @@ const functionMdLinksCli = (path, firtsOption, segundOption) => {
   } else if ((path !== undefined) && (firtsOption === '--stats' || firtsOption === '--s')) {
     result = mdLinks(path, { validate: true }).then((res) => functionStats(res));
   } else if ((path !== undefined) && (firtsOption === undefined) && (segundOption === undefined)) {
-    result = (path, { validate: false }).then((res) => res.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.text}`));
+    result = mdLinks(path, { validate: false }).then((res) => res.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.text}`));
   }
   return result;
 };
