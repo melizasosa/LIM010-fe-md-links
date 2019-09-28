@@ -59,6 +59,13 @@ const resultVS = 'Total:2 Unique: 2 Broken:1';
 const resultValidate = ['F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ OK 200 Netflix', 'F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://www.googleee.com Not Exist Fail Google'];
 const resultStats = 'Total:2 Unique: 2';
 const resultPath = ['F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ Netflix', 'F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://www.googleee.com Google'];
+const arrayLinksUnvalide = [{
+  href: 'https://www.googleee.com',
+  status: 'Fail',
+  statusText: 'Not Exist',
+  text: 'Google',
+  filepath: path.join(process.cwd(), 'prueba\\archivo.md'),
+}];
 const arrayFail = [{
   href: 'https://www.googleee.com',
   text: 'Google',
@@ -67,7 +74,7 @@ const arrayFail = [{
   statusText: 'Not Exist',
 }];
 
-describe('TPermite convertir ruta relativa', () => {
+describe('Permite convertir ruta relativa', () => {
   it('Debería ser una función', () => {
     expect(typeof functionTypePath).toBe('function');
   });
@@ -133,31 +140,33 @@ describe('Permite validar el link que se encuentra en la ruta ingresada', () => 
       expect(data).toStrictEqual(arrayLinks);
       done();
     }));
-  it('Debería devolvernos si los links no son validos', (done) => functionValidateLinks(path.join(process.cwd(), 'prueba\\archivo.md'))
+  it('Debería devolvernos si los links no son validos', (done) => functionValidateLinks(arrayLinksUnvalide)
     .then((data) => {
       expect(data).toStrictEqual(arrayFail);
       done();
     }));
 });
-// // eslint-disable-next-line jest/no-identical-title
+
 describe('Permite devolver un array con objetos de la ruta ingresada', () => {
   it('Debería devolvernos una promesa con validacion del link', (done) => mdLinks(path.join(process.cwd(), 'prueba\\archivo.md'), { validate: true })
     .then((data) => {
       expect(data).toStrictEqual(arrayLinks);
       done();
     }));
-  // eslint-disable-next-line jest/no-identical-title
-  it('Debería vevolvernos una promesa sin la validacion del link', (done) => mdLinks(path.join(process.cwd(), 'prueba\\archivo.md'))
+  it('Debería devolvernos una promesa sin la validacion del link', (done) => mdLinks(path.join(process.cwd(), 'prueba\\archivo.md'))
     .then((data) => {
       expect(data).toStrictEqual(arrayUnvalided);
       done();
     }));
+  it('Debería devolvernos un mensaje indicando que ingrese una ruta', (done) => mdLinks('p')
+    .catch((error) => {
+      expect(error.message).toBe('Ingresar Ruta');
+      done();
+    }));
 });
 
-// eslint-disable-next-line jest/no-identical-title
 describe('Permite devolver un string del total y unique', () => {
   it('Debería retornar un string', () => {
-    // eslint-disable-next-line jest/valid-expect
     expect(functionStats([{
       href: 'https://aws.amazon.com/es/',
       text: 'Netflix',
@@ -191,8 +200,8 @@ describe('Permite devolver los resultados', () => {
   });
 
   it('Deberia devolver file, href y text, status, statusText del archivo en consola', (done) => {
-    functionMdLinksCli(path.join(process.cwd(), 'prueba'), '--validate').then((result) => {
-      expect(result).toStrictEqual(resultValidate);
+    functionMdLinksCli('C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md', '--validate').then((result) => {
+      expect(result).toBe(resultValidate);
       done();
     });
   });
@@ -200,13 +209,6 @@ describe('Permite devolver los resultados', () => {
   it('Deberia devolver total y unique del archivo en consola', (done) => {
     functionMdLinksCli(path.join(process.cwd(), 'prueba'), '--stats').then((result) => {
       expect(result).toStrictEqual(resultStats);
-      done();
-    });
-  });
-
-  it('Deberia devolver total y unique del archivo en consola', (done) => {
-    functionMdLinksCli('prueba').then((result) => {
-      expect(result).toStrictEqual(resultPath);
       done();
     });
   });

@@ -12,6 +12,12 @@ const functionTypePath = (filePath) => {
   return filePath;
 };
 
+// FUNCIÓN PARA VERIFICAR SI ES UNA RUTA
+const functionVeriedPath = (filePath) => {
+  const isItPath = fsModule.existsSync(filePath);
+  return isItPath;
+};
+
 // VERIFICAR SI ES ARCHIVO
 const functionFilePathExists = (nameFile) => {
   const isItFile = fsModule.statSync(nameFile);
@@ -94,11 +100,15 @@ const functionValidateLinks = (path) => {
 };
 
 // FUNCIÓN DE MDLINKS
-const mdLinks = (path, options) => new Promise((resolve) => {
-  if (options && options.validate) {
-    resolve(functionValidateLinks(path));
+const mdLinks = (path, options) => new Promise((resolve, reject) => {
+  if (functionVeriedPath(path)) {
+    if (options && options.validate) {
+      resolve((functionValidateLinks(path)));
+    } else {
+      resolve(functionExtractedLinkFile(path));
+    }
   } else {
-    resolve(functionExtractedLinkFile(path));
+    reject(new Error('Ingresar Ruta'));
   }
 });
 
@@ -120,6 +130,7 @@ const functionValidate = (arrayLinks) => {
 
 // FUNCIÓN OPCION --VALIDATE --STATS
 const functionStatsAndValidate = (arraLyinks) => {
+  // console.log(arraLyinks);
   const totalElementosLinks = arraLyinks.map((elemento) => elemento.href);
   const linksUnique = totalElementosLinks.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
   const totalElementosBroken = arraLyinks.filter((val) => val.statusText === 'Fail' || val.statusText === 'Not Found' || val.statusText === 'Not Exist');
@@ -131,21 +142,28 @@ const functionStatsAndValidate = (arraLyinks) => {
 const functionMdLinksCli = (path, firtsOption, segundOption) => {
   let result;
   if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
-    result = mdLinks(path, { validate: true }).then((res) => functionStatsAndValidate(res));
+    result = mdLinks(path, { validate: true }).then((res) => functionStatsAndValidate(res))
+      .catch((err) => console.log(err));
   } else if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v')) {
-    result = mdLinks(path, { validate: true }).then((res) => functionValidate(res));
+    result = mdLinks(path, { validate: true }).then((res) => functionValidate(res))
+      .catch((err) => console.log(err));
   } else if ((path !== undefined) && (firtsOption === '--stats' || firtsOption === '--s')) {
     result = mdLinks(path, { validate: true }).then((res) => functionStats(res));
   } else if ((path !== undefined) && (firtsOption === undefined) && (segundOption === undefined)) {
     result = mdLinks(path, { validate: false }).then((res) => res.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.text}`));
-  }
+  } 
+  // else {
+  //   result = mdLinks(path, { validate: false }).then(() => console.log('Ingresar ruta'));
+  // }
+
   return result;
 };
 
-// functionMdLinksCli('prueba', '--v').then((res) => console.log(res));
+functionMdLinksCli('prueba', '--v', '--s').then((res) => console.log(res));
 
 module.exports = {
   functionTypePath,
+  functionVeriedPath,
   functionFilePathExists,
   functionIsFileMd,
   functionReadFileS,
