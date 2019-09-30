@@ -30,7 +30,7 @@ md-Links <path-to-file> [options]
 
 #### Opciones
 La librería te permite realizar diferentes tipos de consulta:
-- path, --validate, --stats
+- `path, --validate, --stats`
   Esta consulta te permite ingresar la ruta, la validacion y el status, lo cual nos imprime estadistica de los links como el total de los links, cuantos son únicos y cuántos son rotos.
 
   Ingresar comando
@@ -39,7 +39,16 @@ La librería te permite realizar diferentes tipos de consulta:
   Resultado
   ![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
 
-- path, --validate
+- `path, --validate`
+  Con esta línea de comando te permte saber sobre los datos estadísticos de los links.
+  
+  Ingresar comando
+  ![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
+
+  Resultado
+  ![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
+
+
 - path, --stats
 - path
 
