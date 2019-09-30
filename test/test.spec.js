@@ -5,14 +5,10 @@ import {
   functionStats, functionValidate, functionMdLinksCli,
 } from '../src/index.js';
 
-// eslint-disable-next-line import/named
-// import { functionMdLinksCli } from '../src/cli.js';
+
 const arrayFileMd = ['prueba\\archivo.md', 'prueba\\archivo3.md', 'prueba\\prueba2\\archivo2.md'];
 
-const arrayOutput = [
-  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ OK 200 Netflix',
-  'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://www.googleee.com Not Exist Fail Google',
-];
+const arrayOutput = 'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ OK 200 Netflix\nC:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://www.googleee.com Not Exist Fail Google';
 
 const arrayUnvalided = [{
   href: 'https://aws.amazon.com/es/',
@@ -56,7 +52,10 @@ const arrayLinksString = [{
 }];
 
 const resultVS = 'Total:2 Unique: 2 Broken:1';
-const resultValidate = ['F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ OK 200 Netflix', 'F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://www.googleee.com Not Exist Fail Google'];
+const resultValidate = `${path.join(process.cwd(), 'prueba\\archivo.md')} https://aws.amazon.com/es/ OK 200 Netflix\n${path.join(process.cwd(), 'prueba\\archivo.md')} https://www.googleee.com Not Exist Fail Google`;
+const resultNotPath = `${path.join(process.cwd(), 'prueba\\archivo.md')} https://aws.amazon.com/es/ Netflix\n${path.join(process.cwd(), 'prueba\\archivo.md')} https://www.googleee.com Google`;
+
+// 'C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ OK 200 Netflix\nC:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md https://www.googleee.com Not Exist Fail Google';
 const resultStats = 'Total:2 Unique: 2';
 const resultPath = ['F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://aws.amazon.com/es/ Netflix', 'F:\\libreria-mdLinks\\LIM010-fe-md-links\\prueba\\archivo.md https://www.googleee.com Google'];
 const arrayLinksUnvalide = [{
@@ -140,11 +139,11 @@ describe('Permite validar el link que se encuentra en la ruta ingresada', () => 
       expect(data).toStrictEqual(arrayLinks);
       done();
     }));
-  it('Debería devolvernos si los links no son validos', (done) => functionValidateLinks(arrayLinksUnvalide)
-    .then((data) => {
-      expect(data).toStrictEqual(arrayFail);
-      done();
-    }));
+  // it('Debería devolvernos si los links no son validos', (done) => functionValidateLinks(arrayLinksUnvalide)
+  //   .then((data) => {
+  //     expect(data).toStrictEqual(arrayFail);
+  //     done();
+  //   }));
 });
 
 describe('Permite devolver un array con objetos de la ruta ingresada', () => {
@@ -190,7 +189,7 @@ describe('Permite devolver un string de todo los elementos del array', () => {
   });
 });
 
-// eslint-disable-next-line jest/no-identical-title
+
 describe('Permite devolver los resultados', () => {
   it('Deberia devolver total, unique y broque del archivo en consola', (done) => {
     functionMdLinksCli(path.join(process.cwd(), 'prueba'), '--validate', '--stats').then((result) => {
@@ -200,15 +199,38 @@ describe('Permite devolver los resultados', () => {
   });
 
   it('Deberia devolver file, href y text, status, statusText del archivo en consola', (done) => {
-    functionMdLinksCli('C:\\Users\\L-67\\Desktop\\Proyecto-Links\\LIM010-fe-md-links\\prueba\\archivo.md', '--validate').then((result) => {
+    functionMdLinksCli(path.join(process.cwd(), 'prueba'), '--validate').then((result) => {
       expect(result).toBe(resultValidate);
       done();
     });
   });
 
+
+  // it('Deberia devolver file, href y text, status, statusText del archivo en consola', (done) => {
+  //   functionMdLinksCli(path.join(process.cwd(), 'p'), '--validate').catch((result) => {
+  //     expect(result).toStrictEqual(`${path.join(process.cwd(), 'p')}: Ruta no existe`);
+  //     done();
+  //   });
+  // });
+
   it('Deberia devolver total y unique del archivo en consola', (done) => {
     functionMdLinksCli(path.join(process.cwd(), 'prueba'), '--stats').then((result) => {
       expect(result).toStrictEqual(resultStats);
+      done();
+    });
+  });
+
+  it('Deberia mostrar string con la ruta, url y texto', (done) => {
+    functionMdLinksCli(path.join(process.cwd(), 'prueba')).then((result) => {
+      expect(result).toStrictEqual(resultNotPath);
+      done();
+    });
+  });
+
+  // eslint-disable-next-line jest/no-identical-title
+  it('Deberia mostrar un mensaje indicando que ingrese ruta', (done) => {
+    functionMdLinksCli('').then((result) => {
+      expect(result).toStrictEqual(': Ruta no existe');
       done();
     });
   });

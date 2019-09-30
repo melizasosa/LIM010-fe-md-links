@@ -3,6 +3,7 @@ const fsModule = require('fs');
 const pathModule = require('path');
 const marked = require('marked');
 const fetch = require('node-fetch');
+const colors = require('colors/safe');
 
 
 const functionTypePath = (filePath) => {
@@ -125,12 +126,12 @@ const functionStats = (arrayLinks) => {
 // FUNCIÓN OPCIÓN --VALIDATE --V
 const functionValidate = (arrayLinks) => {
   const totalElementosArray = arrayLinks.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.statusText} ${elemento.status} ${elemento.text}`);
-  return totalElementosArray;
+  return totalElementosArray.join('\n');
+  // strLinks.join('\n')
 };
 
 // FUNCIÓN OPCION --VALIDATE --STATS
 const functionStatsAndValidate = (arraLyinks) => {
-  // console.log(arraLyinks);
   const totalElementosLinks = arraLyinks.map((elemento) => elemento.href);
   const linksUnique = totalElementosLinks.filter((valor, indiceActual, arreglo) => arreglo.indexOf(valor) === indiceActual);
   const totalElementosBroken = arraLyinks.filter((val) => val.statusText === 'Fail' || val.statusText === 'Not Found' || val.statusText === 'Not Exist');
@@ -138,28 +139,35 @@ const functionStatsAndValidate = (arraLyinks) => {
   return statsValidate;
 };
 
+// FUNCIÓN OPCION --VALIDATE --STATS
+const functionOnlyPath = (arrayLinks) => {
+  const totalElementosArray = arrayLinks.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.text}`);
+  return totalElementosArray.join('\n');
+};
+
 // FUNCIÓN PARA LAS OPCIONES CON EL CLI
 const functionMdLinksCli = (path, firtsOption, segundOption) => {
   let result;
   if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
-    result = mdLinks(path, { validate: true }).then((res) => functionStatsAndValidate(res))
-      .catch((err) => console.log(err));
+    result = mdLinks(path, { validate: true }).then((res) => colors.blue(functionStatsAndValidate(res)))
+      .catch(() => `${path}: Ruta no existe`);
   } else if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v')) {
-    result = mdLinks(path, { validate: true }).then((res) => functionValidate(res))
-      .catch((err) => console.log(err));
+    result = mdLinks(path, { validate: true }).then((res) => colors.blue(functionValidate(res)))
+      .catch(() => `${path}: Ruta no existe`);
   } else if ((path !== undefined) && (firtsOption === '--stats' || firtsOption === '--s')) {
-    result = mdLinks(path, { validate: true }).then((res) => functionStats(res));
+    result = mdLinks(path, { validate: true }).then((res) => colors.blue(functionStats(res)))
+      .catch(() => `${path}: Ruta no existe`);
   } else if ((path !== undefined) && (firtsOption === undefined) && (segundOption === undefined)) {
-    result = mdLinks(path, { validate: false }).then((res) => res.map((elemento) => `${elemento.filepath} ${elemento.href} ${elemento.text}`));
-  } 
-  // else {
-  //   result = mdLinks(path, { validate: false }).then(() => console.log('Ingresar ruta'));
-  // }
+    result = mdLinks(path, { validate: false }).then((res) => colors.blue(functionOnlyPath(res)))
+      .catch(() => `${path}: Ruta no existe`);
+  } else {
+    result = mdLinks(path, { validate: false }).catch(() => colors.red('Ruta no existe'));
+  }
 
   return result;
 };
 
-functionMdLinksCli('prueba', '--v', '--s').then((res) => console.log(res));
+// functionMdLinksCli('prueba', '--v', '--s').then((res) => console.log(res));
 
 module.exports = {
   functionTypePath,
@@ -173,5 +181,6 @@ module.exports = {
   mdLinks,
   functionStats,
   functionValidate,
+  functionOnlyPath,
   functionMdLinksCli,
 };
