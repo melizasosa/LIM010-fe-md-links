@@ -43,7 +43,7 @@ La librería te permite realizar diferentes tipos de consulta:
   Con esta línea de comando te permte saber sobre los datos estadísticos de los links.
   
   Ingresar comando
-  ![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
+  ![--validate](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
 
   Resultado
   ![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
