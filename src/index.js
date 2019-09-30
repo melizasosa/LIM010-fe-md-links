@@ -109,7 +109,7 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
       resolve(functionExtractedLinkFile(path));
     }
   } else {
-    reject(new Error('Ingresar Ruta'));
+    reject(new Error('Ruta incorrecta'));
   }
 });
 
@@ -150,7 +150,7 @@ const functionMdLinksCli = (path, firtsOption, segundOption) => {
   let result;
   if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v') && (segundOption === '--stats' || segundOption === '--s')) {
     result = mdLinks(path, { validate: true }).then((res) => colors.blue(functionStatsAndValidate(res)))
-      .catch(() => `${path}: Ruta no existe`);
+      .catch((e) => e.message);
   } else if ((path !== undefined) && (firtsOption === '--validate' || firtsOption === '--v')) {
     result = mdLinks(path, { validate: true }).then((res) => colors.blue(functionValidate(res)))
       .catch(() => `${path}: Ruta no existe`);
