@@ -21,7 +21,8 @@ A continuación, se muestra el diagrama de flujo con el algoritmo para la implem
 ## Documentación Tecnica de la librería
 ### Instalación de la librería
 Podemos instalar directamente desde GitHub con el comando:
-  npm install mdLinks
+- npm install mdLinks
+- Instalar la libreria via `npm install --mdLinks`
 
 ### Guía  de uso
 El ejecutable de nuestra aplicación se puede ejecutar de la siguiente manera a través de la terminal:
