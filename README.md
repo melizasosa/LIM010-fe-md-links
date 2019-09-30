@@ -33,10 +33,11 @@ La librería te permite realizar diferentes tipos de consulta:
 - path, --validate, --stats
 Esta consulta te permite ingresar la ruta, la validacion y el status, lo cual nos imprime estadistica de los links como el total de los links, cuantos son únicos y cuántos son rotos.
 Ingresar comando
-[--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
+![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
 
 Resultado
-[--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
+![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
+
 - path, --validate
 - path, --stats
 - path
