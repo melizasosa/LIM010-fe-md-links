@@ -21,16 +21,22 @@ A continuación, se muestra el diagrama de flujo con el algoritmo para la implem
 ## Documentación Tecnica de la librería
 ### Instalación de la librería
 Podemos instalar directamente desde GitHub con el comando:
-- npm install mdLinks
+
 - Instalar la libreria via `npm install --mdLinks`
 
 ### Guía  de uso
 El ejecutable de nuestra aplicación se puede ejecutar de la siguiente manera a través de la terminal:
 md-Links <path-to-file> [options]
 
-Valida si las URLs responden ok o no, solo debe identifica el archivo markdown (a partir de la ruta que recibe como argumento), analizar el archivo Markdown e imprimir los links que vaya encontrando, junto con la ruta del archivo donde aparece y el texto que hay dentro del link.
 #### Opciones
+La librería te permite realizar diferentes tipos de consulta:
 - path, --validate, --stats
+Esta consulta te permite ingresar la ruta, la validacion y el status, lo cual nos imprime estadistica de los links como el total de los links, cuantos son únicos y cuántos son rotos.
+Ingresar comando
+[--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
+
+Resultado
+[--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
 - path, --validate
 - path, --stats
 - path
