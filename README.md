@@ -40,17 +40,40 @@ La librería te permite realizar diferentes tipos de consulta:
   ![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
 
 - `path, --validate`
-  Con esta línea de comando te permte saber sobre los datos estadísticos de los links.
+  Con esta línea de comando te permIte saber sobre los datos estadísticos de los links.
   
   Ingresar comando
   ![--validate](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
 
   Resultado
-  ![--validate --stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
+  ![--validate](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
 
+- `path, --stats`
+  Con esta línea de comando te permite saber sobre los datos estadísticos de los links como el total y si son únicos.
+  
+  Ingresar comando
+  ![--stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVS.PNG)
 
-- path, --stats
-- path
+  Resultado
+  ![--stats](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksVSR.PNG)
+
+- `path`
+  Con esta línea de comando te permite saber todo los links sin la validación.
+  
+  Ingresar comando
+  ![--path](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksPath.PNG)
+
+  Resultado
+  ![--path](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksPR.PNG)
+
+- Si no ingresas una ruta ni una opción te muestra un mensaje indicando.
+  
+  Ingresar comando
+  ![sin ruta](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLink.PNG)
+
+  Resultado
+  ![sin ruta](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksR.PNG)
+
 
 ## Introducción
 
