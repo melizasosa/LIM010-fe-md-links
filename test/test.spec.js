@@ -1,10 +1,12 @@
 import path from 'path';
+
 import {
   functionTypePath, functionFilePathExists, functionIsFileMd, functionReadFileS,
   functionReadAllFiles, functionExtractedLinkFile, functionValidateLinks, mdLinks,
   functionStats, functionValidate, functionMdLinksCli,
 } from '../src/index.js';
 
+const colors = require('colors');
 
 const arrayFileMd = ['prueba\\archivo.md', 'prueba\\archivo3.md', 'prueba\\prueba2\\archivo2.md'];
 
@@ -139,11 +141,6 @@ describe('Permite validar el link que se encuentra en la ruta ingresada', () => 
       expect(data).toStrictEqual(arrayLinks);
       done();
     }));
-  // it('Debería devolvernos si los links no son validos', (done) => functionValidateLinks(arrayLinksUnvalide)
-  //   .then((data) => {
-  //     expect(data).toStrictEqual(arrayFail);
-  //     done();
-  //   }));
 });
 
 describe('Permite devolver un array con objetos de la ruta ingresada', () => {
@@ -159,7 +156,7 @@ describe('Permite devolver un array con objetos de la ruta ingresada', () => {
     }));
   it('Debería devolvernos un mensaje indicando que ingrese una ruta', (done) => mdLinks('p')
     .catch((error) => {
-      expect(error.message).toBe('Ingresar Ruta');
+      expect(error.message).toBe('Ruta incorrecta');
       done();
     }));
 });
@@ -204,14 +201,6 @@ describe('Permite devolver los resultados', () => {
       done();
     });
   });
-
-
-  // it('Deberia devolver file, href y text, status, statusText del archivo en consola', (done) => {
-  //   functionMdLinksCli(path.join(process.cwd(), 'p'), '--validate').catch((result) => {
-  //     expect(result).toStrictEqual(`${path.join(process.cwd(), 'p')}: Ruta no existe`);
-  //     done();
-  //   });
-  // });
 
   it('Deberia devolver total y unique del archivo en consola', (done) => {
     functionMdLinksCli(path.join(process.cwd(), 'prueba'), '--stats').then((result) => {
