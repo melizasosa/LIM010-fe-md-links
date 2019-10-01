@@ -74,3 +74,37 @@ La librería te permite realizar diferentes tipos de consulta:
   Resultado
   ![sin ruta](https://github.com/melizasosa/LIM010-fe-md-links/blob/master/mylib/img/mdLinksR.PNG)
 
+## Objetivos de aprendizaje
+
+Recuerda colocar en esta seccion los objetivos de aprendizaje que quedaron 
+pendientes de tu proyecto anterior.
+
+### Javascript
+- [x] Uso de callbacks
+- [x] Consumo de Promesas
+- [x] Creacion de Promesas
+- [x] Modulos de Js
+- [x] Recursión
+
+### Node
+- [x] Sistema de archivos
+- [ ] package.json
+- [x] crear modules
+- [x] Instalar y usar modules
+- [ ] npm scripts
+- [ ] CLI (Command Line Interface - Interfaz de Línea de Comando)
+
+### Testing
+- [x] Testeo de tus funciones
+- [x] Testeo asíncrono
+- [ ] Uso de librerias de Mock
+- [ ] Mocks manuales
+- [ ] Testeo para multiples Sistemas Operativos
+
+### Git y Github
+- [] Organización en Github
+
+### Buenas prácticas de desarrollo
+- [ ] Modularización
+- [ ] Nomenclatura / Semántica
+- [x] Linting
