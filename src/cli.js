@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { functionMdLinksCli } from './index.js';
+import { functionMdLinksCli } from './mdLinksCli.js';
 
 const args = process.argv.slice(2);
 
