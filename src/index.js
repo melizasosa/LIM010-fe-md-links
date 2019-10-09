@@ -156,5 +156,6 @@ module.exports = {
   mdLinks,
   functionStats,
   functionValidate,
+  functionStatsAndValidate,
   functionOnlyPath,
 };
